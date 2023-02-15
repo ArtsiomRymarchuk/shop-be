@@ -17,5 +17,5 @@ export const handler = async (event) => {
   }
 
 
-  return createSuccessResponse({ product })
+  return createSuccessResponse(product)
 };

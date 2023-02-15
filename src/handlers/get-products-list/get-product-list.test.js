@@ -11,6 +11,6 @@ describe('get-products-list', () => {
   test('should return all items', async () => {
     await handler();
 
-    expect(createSuccessResponse).toHaveBeenCalledWith({ products: CAR_PRODUCTS });
+    expect(createSuccessResponse).toHaveBeenCalledWith(CAR_PRODUCTS);
   });
 });

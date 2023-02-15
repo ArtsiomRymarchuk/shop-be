@@ -14,7 +14,7 @@ describe('get-products-list-by-id', () => {
   test('should return specific item', async () => {
     await handler({ pathParameters: { id: 1 } });
 
-    expect(createSuccessResponse).toHaveBeenCalledWith({ product: CAR_PRODUCTS.find(item => item.id === 1) });
+    expect(createSuccessResponse).toHaveBeenCalledWith(CAR_PRODUCTS.find(item => item.id === 1));
   });
 
   test('should return 404 error if item not found', async () => {
