@@ -1,0 +1,73 @@
+service: product-service
+
+plugins:
+  - serverless-s3-deploy
+  - serverless-functions-base-path
+  - serverless-webpack
+
+frameworkVersion: '3.25'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+  apiName: product-service-api
+
+custom:
+  functionsBasePath: src/handlers
+  webpack:
+    webpackConfig: "./webpack.config.js"
+    includeModules: true
+    keepOutputDirectory: true
+  assets:
+    auto: true
+    targets:
+      - bucket: !Ref SwaggerBucket
+        empty: false
+        files:
+          - source: ./static/swagger/
+            globs: "**"
+
+functions:
+  getProductsList:
+    handler: get-products-list/get-products-list.handler
+    events:
+      - http:
+          path: api/get-product-list
+          method: get
+
+  getProductsListById:
+    handler: get-products-list-by-id/get-products-list-by-id.handler
+    events:
+      - http:
+          path: api/get-product-list/{id}
+          method: get
+
+resources:
+  Resources:
+    SwaggerBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:service}-swagger
+        AccessControl: PublicRead
+        CorsConfiguration:
+          CorsRules:
+            - AllowedHeaders: 
+                - '*'
+              AllowedMethods: 
+                - 'GET'
+              AllowedOrigins: 
+                - '*'
+
+    WebAppS3BucketPolicy:
+      Type: AWS::S3::BucketPolicy
+      Properties:
+        Bucket:
+          Ref: SwaggerBucket
+        PolicyDocument:
+          Statement:
+            - Sid: PublicReadGetObject
+              Effect: Allow
+              Action: s3:GetObject
+              Resource: arn:aws:s3:::${self:service}-swagger/*
+              Principal: '*'
