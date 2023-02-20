@@ -4,7 +4,7 @@ plugins:
   - serverless-s3-deploy
   - serverless-functions-base-path
   - serverless-webpack
-
+  - serverless-ssm-fetch
 frameworkVersion: '3.25'
 
 provider:
@@ -12,9 +12,21 @@ provider:
   runtime: nodejs14.x
   region: us-east-1
   apiName: product-service-api
+  environment:
+    PGPORT: 5432
 
 custom:
   functionsBasePath: src/handlers
+  serverlessSsmFetch:
+    PGUSER: rds-username-${self:service}
+    PGPASSWORD: rds-password-${self:service}
+    PGHOST: rds-host-${self:service}
+    PGDATABASE: rds-database-${self:service}
+  ssmToEnvironment:
+    - PGUSER
+    - PGPASSWORD
+    - PGHOST
+    - PGDATABASE
   webpack:
     webpackConfig: "./webpack.config.js"
     includeModules: true
@@ -42,6 +54,14 @@ functions:
       - http:
           path: api/get-product-list/{id}
           method: get
+
+  createProduct:
+    handler: create-product/create-product.handler
+    events:
+      - http:
+          path: product
+          method: POST
+          cors: true
 
 resources:
   Resources:
