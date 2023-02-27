@@ -1,0 +1,5 @@
+export const TRANSACTION_PHASES = {
+  BEGIN: 'BEGIN',
+  COMMIT: 'COMMIT',
+  ROLLBACK: 'ROLLBACK'
+}
