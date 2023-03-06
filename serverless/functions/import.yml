@@ -1,0 +1,20 @@
+importProductsFile:
+  handler: import/import.handler
+  events:
+    - http:
+        path: import
+        method: GET
+        request:
+          parameters:
+            querystrings:
+              name: true
+
+importFileParser:
+  handler: file-parser/index.handler
+  events:
+    - s3:
+        bucket: ${self:service}-upload
+        event: s3:ObjectCreated:*
+        rules:
+          - prefix: uploaded/
+        existing: true

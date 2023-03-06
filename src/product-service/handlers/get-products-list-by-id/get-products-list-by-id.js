@@ -1,7 +1,7 @@
 import { validate as uuidValidate } from 'uuid';
-import { BadRequestError, NotFoundRequestError, InternalServerRequestError } from '../../helpers/errors';
-import { createErrorResponse, createSuccessResponse } from '../../utils/api-response';
-import { pool } from '../../service/postgres';
+import { BadRequestError, NotFoundRequestError, InternalServerRequestError } from '../../../helpers/errors';
+import { createErrorResponse, createSuccessResponse } from '../../../utils/api-response';
+import { pool } from '../../../service/postgres';
 
 let client;
 

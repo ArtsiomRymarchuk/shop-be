@@ -1,0 +1,39 @@
+service: import-service
+
+plugins:
+  - serverless-functions-base-path
+  - serverless-webpack
+frameworkVersion: '3.25'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: us-east-1
+  apiName: import-service-api
+  environment:
+    UPLOAD_BUCKET_NAME: ${self:service}-upload
+    REGION: ${self:provider.region}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action: "s3:ListBucket"
+      Resource:
+        - "arn:aws:s3:::${self:service}-upload"
+    - Effect: Allow
+      Action:
+        - "s3:*"
+      Resource:
+        - "arn:aws:s3:::${self:service}-upload/*"
+
+custom:
+  functionsBasePath: src/import-service/handlers
+  webpack:
+    webpackConfig: "./webpack.config.js"
+    includeModules: true
+    keepOutputDirectory: true
+
+functions:
+  - ${file(./serverless/functions/import.yml)}
+
+# resources:
+#   - ${file(./serverless/resources/upload-bucket.yml)}

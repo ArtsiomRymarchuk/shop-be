@@ -1,6 +1,6 @@
-import { createSuccessResponse, createErrorResponse } from '../../utils/api-response';
-import { InternalServerRequestError } from './../../helpers/errors';
-import { pool } from '../../service/postgres';
+import { createSuccessResponse, createErrorResponse } from '../../../utils/api-response';
+import { InternalServerRequestError } from '../../../helpers/errors';
+import { pool } from '../../../service/postgres';
 
 let client;
 
