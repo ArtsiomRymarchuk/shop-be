@@ -40,7 +40,10 @@ export const handler = async (event) => {
     );
     console.log(url);
 
-    return createSuccessResponse({ url });
+    return createSuccessResponse({
+      message: `${queryParams.name} was created`,
+      url,
+    });
   } catch (error) {
     console.log(error);
     return createErrorResponse(
