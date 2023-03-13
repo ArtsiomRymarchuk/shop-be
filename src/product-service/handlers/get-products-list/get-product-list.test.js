@@ -1,7 +1,7 @@
 import { createSuccessResponse } from '../../utils/api-response';
 import { handler } from './get-products-list';
 
-import { CAR_PRODUCTS } from "../../mocks/products";
+import { CAR_PRODUCTS } from '../../mocks/products';
 
 jest.mock('../../utils/api-response', () => ({
   createSuccessResponse: jest.fn(),

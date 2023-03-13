@@ -1,0 +1,42 @@
+  {
+    "count": 4,
+    "description": "BMW 1-series",
+    "id": 1666,
+    "price": 240,
+    "title": "BMW 1-series"
+  },
+  {
+    "count": 6,
+    "description": "BMW 3-series",
+    "id": 2666,
+    "price": 100,
+    "title": "BMW 3-series"
+  },
+  {
+    "count": 7,
+    "description": "BMW 2-series",
+    "id": 3666,
+    "price": 230,
+    "title": "BMW 2-series"
+  },
+  {
+    "count": 12,
+    "description": "BMW 7-series",
+    "id": 4666,
+    "price": 150,
+    "title": "BMW 7-series"
+  },
+  {
+    "count": 7,
+    "description": "BMW 2-series",
+    "id": 5666,
+    "price": 230,
+    "title": "BMW 2-series"
+  },
+  {
+    "count": 8,
+    "description": "BMW 4-series",
+    "id": 6666,
+    "price": 150,
+    "title": "BMW 4-series"
+  }

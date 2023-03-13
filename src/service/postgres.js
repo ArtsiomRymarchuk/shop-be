@@ -11,8 +11,7 @@ const dbOptions = {
   ssl: {
     rejectUnauthorized: false,
   },
-  connectionTimeoutMillis: 5000
+  connectionTimeoutMillis: 5000,
 };
 
 export const pool = new Pool(dbOptions);
-
