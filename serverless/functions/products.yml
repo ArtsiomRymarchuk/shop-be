@@ -19,3 +19,11 @@ createProduct:
         path: product
         method: POST
         cors: true
+
+catalogBatchProcess:
+  handler: batch-process/index.handler
+  events:
+    - sqs:
+        batchSize: 5
+        arn:
+          Fn::GetAtt: [catalogItemsQueue, Arn]
