@@ -13,6 +13,7 @@ provider:
   environment:
     UPLOAD_BUCKET_NAME: ${self:service}-upload
     REGION: ${self:provider.region}
+    SQS_URL: ${cf:product-service-dev.SqsUrl}
 
   iamRoleStatements:
     - Effect: Allow
@@ -24,6 +25,10 @@ provider:
         - "s3:*"
       Resource:
         - "arn:aws:s3:::${self:service}-upload/*"
+    - Effect: Allow
+      Action: "sqs:*"
+      Resource:
+        - ${cf:product-service-dev.SqsArn}
 
 custom:
   functionsBasePath: src/import-service/handlers
@@ -35,5 +40,5 @@ custom:
 functions:
   - ${file(./serverless/functions/import.yml)}
 
-# resources:
-#   - ${file(./serverless/resources/upload-bucket.yml)}
+resources:
+  - ${file(./serverless/resources/upload-bucket.yml)}

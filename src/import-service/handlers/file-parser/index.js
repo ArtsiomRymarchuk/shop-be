@@ -4,11 +4,19 @@ import {
   CopyObjectCommand,
   DeleteObjectCommand,
 } from '@aws-sdk/client-s3';
+import { SQSClient, SendMessageCommand } from '@aws-sdk/client-sqs';
 import csv from 'csv-parser';
+import stream from 'stream';
+import util from 'util';
+
+const { REGION, UPLOAD_BUCKET_NAME, SQS_URL } = process.env;
+
+const finished = util.promisify(stream.finished);
+const s3Client = new S3Client({ region: REGION });
+const sqsClient = new SQSClient({ region: REGION });
 
 export const handler = async (event) => {
-  const { REGION, UPLOAD_BUCKET_NAME } = process.env;
-  const s3Client = new S3Client({ region: REGION });
+  const results = [];
   try {
     console.log('Start lambda executing....');
     for (const record of event.Records) {
@@ -22,11 +30,23 @@ export const handler = async (event) => {
       const getObject = new GetObjectCommand(bucketParams);
       const s3Object = await s3Client.send(getObject);
 
-      s3Object.Body.pipe(csv()).on('end', () => {
-        console.log('CSV file successfully parsed');
-      });
+      await finished(
+        s3Object.Body.pipe(csv())
+          .on('data', (data) => results.push(data))
+          .on('end', () => {
+            console.log('CSV file successfully parsed');
+          })
+      );
 
       console.log(`Data for ${record.s3.object.key}:`);
+      results.map((item) => {
+        sqsClient.send(
+          new SendMessageCommand({
+            MessageBody: JSON.stringify(item),
+            QueueUrl: SQS_URL,
+          })
+        );
+      });
 
       const copyObjectCommand = new CopyObjectCommand({
         Bucket: process.env.UPLOAD_BUCKET_NAME,
