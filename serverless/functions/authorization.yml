@@ -1,0 +1,2 @@
+authorization:
+  handler: authorization/index.handler
