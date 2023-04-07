@@ -1,0 +1,50 @@
+service: cart-service
+frameworkVersion: '3'
+
+useDotenv: true
+
+plugins:
+  - serverless-offline
+  - serverless-ssm-fetch
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  stage: dev
+  region: us-east-1
+  environment:
+    PG_PORT: 5432
+    GET_PRODUCT_LIST_LAMBDA_ARN: arn:aws:lambda:us-east-1:205924547253:function:product-service-dev-getProductsList
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action: 'lambda:InvokeFunction'
+          Resource: '*'
+        - Effect: Allow
+          Action: 'lambda:InvokeAsync'
+          Resource: '*'
+
+custom:
+  lambdasPath: dist/lambdas/index
+  serverlessSsmFetch:
+    PG_USER: rds-username-product-service
+    PG_PASSWORD: rds-password-product-service
+    PG_HOST: rds-host-product-service
+    PG_DATABASE: rds-database-product-service
+  ssmToEnvironment:
+    - PG_USER
+    - PG_PASSWORD
+    - PG_HOST
+    - PG_DATABASE
+
+functions:
+  main:
+    handler: dist/serverless.handler
+    events:
+      - http:
+          method: ANY
+          path: /
+      - http:
+          method: ANY
+          path: '{proxy+}'
