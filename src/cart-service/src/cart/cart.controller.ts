@@ -15,7 +15,7 @@ import { OrderEntity, OrderService, OrderStatusEnum } from '../order';
 import { AppRequest, getUserIdFromRequest } from '../shared';
 
 import { calculateCartTotal } from './models-rules';
-import { CartService } from './services';
+import { CartService } from './services/cart.service';
 
 @Controller('api/profile/cart')
 export class CartController {

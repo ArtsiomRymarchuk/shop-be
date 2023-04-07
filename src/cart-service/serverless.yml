@@ -11,7 +11,7 @@ provider:
   name: aws
   runtime: nodejs14.x
   stage: dev
-  region: eu-west-1
+  region: us-east-1
   environment:
     PG_PORT: 5432
     GET_PRODUCT_LIST_LAMBDA_ARN: arn:aws:lambda:us-east-1:205924547253:function:product-service-dev-getProductsList
@@ -27,12 +27,16 @@ provider:
 
 custom:
   lambdasPath: dist/lambdas/index
-  PG_POSTFIX: prod
   serverlessSsmFetch:
     PG_USER: rds-username-product-service
-    PG_PASSWORD: rds-password-${self:service}
-    PG_HOST: rds-host-${self:service}
-    PG_DATABASE: rds-database-${self:service}
+    PG_PASSWORD: rds-password-product-service
+    PG_HOST: rds-host-product-service
+    PG_DATABASE: rds-database-product-service
+  ssmToEnvironment:
+    - PG_USER
+    - PG_PASSWORD
+    - PG_HOST
+    - PG_DATABASE
 
 functions:
   main:
@@ -44,57 +48,3 @@ functions:
       - http:
           method: ANY
           path: '{proxy+}'
-  createUser:
-    handler: ${self:custom.lambdasPath}.createUser
-    events:
-      - http:
-          method: POST
-          path: user
-  getUser:
-    handler: ${self:custom.lambdasPath}.getUser
-    events:
-      - http:
-          method: GET
-          path: user/{id}
-  getOrder:
-    handler: ${self:custom.lambdasPath}.getOrder
-    events:
-      - http:
-          method: GET
-          path: order/{id}
-  createOrder:
-    handler: ${self:custom.lambdasPath}.createOrder
-    events:
-      - http:
-          method: POST
-          path: order
-  updateOrder:
-    handler: ${self:custom.lambdasPath}.updateOrder
-    events:
-      - http:
-          method: PATCH
-          path: order/{id}
-  findUserCart:
-    handler: ${self:custom.lambdasPath}.findUserCart
-    events:
-      - http:
-          method: GET
-          path: cart/{userId}
-  clearUserCart:
-    handler: ${self:custom.lambdasPath}.clearUserCart
-    events:
-      - http:
-          method: DELETE
-          path: cart/{userId}
-  updateUserCart:
-    handler: ${self:custom.lambdasPath}.updateUserCart
-    events:
-      - http:
-          method: PUT
-          path: cart/{userId}
-  checkout:
-    handler: ${self:custom.lambdasPath}.checkout
-    events:
-      - http:
-          method: POST
-          path: cart/checkout/{userId}

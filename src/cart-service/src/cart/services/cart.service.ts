@@ -3,11 +3,7 @@ import { throwError } from '@helpers';
 import { Injectable } from '@nestjs/common';
 import { Client } from 'pg';
 import { v4 } from 'uuid';
-import {
-  Cart,
-  cartItemTableName,
-  cartTableName,
-} from '../models';
+import { Cart, cartItemTableName, cartTableName } from '../models';
 import * as _ from 'lodash';
 import AWS from 'aws-sdk';
 const lambda = new AWS.Lambda();
@@ -47,6 +43,8 @@ export class CartService {
         })
         .promise();
 
+      console.log('Payload from Lambda', Payload);
+
       const { body } = JSON.parse(Payload as string);
       const productList: {
         id: string;
@@ -54,7 +52,7 @@ export class CartService {
         description: string;
         price: number;
         count: number;
-      }[] = JSON.parse(body).products;
+      }[] = JSON.parse(body);
 
       const ixProductList = _.keyBy(productList, 'id');
 
